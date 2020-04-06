@@ -186,7 +186,7 @@ public class ContTree {
 		}
 		else
 		{
-			System.out.println("File is already exist.");
+			System.out.println("already exist.");
 		}	
 	}
 		
