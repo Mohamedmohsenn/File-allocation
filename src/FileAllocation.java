@@ -22,6 +22,15 @@ public class FileAllocation {
 				{
 					c.deleteAll(name);
 				}
+				else if(command.equals("DisplayDiskStatus"))
+				{
+					c.displayDiskStatus();
+				}
+				else if(command.equals("DisplayDiskStructure"))
+				{
+					System.out.println("root");
+					c.displayDiskStructure(c.root);
+				}
 				else
 				{
 					System.out.println("Wrong command");
@@ -47,10 +56,20 @@ public class FileAllocation {
 				{
 					c.deleteAll(name);
 				}
+				else if(command.equals("DisplayDiskStatus"))
+				{
+					c.displayDiskStatus();
+				}
+				else if(command.equals("DisplayDiskStructure"))
+				{
+					System.out.println("root");
+					c.displayDiskStructure(c.root);
+				}
 				else
 				{
 					System.out.println("Wrong command");
 				}
+				
 			}
 		}
 		else

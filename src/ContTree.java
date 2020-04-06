@@ -228,6 +228,64 @@ public class ContTree {
 				diskArray[i] = false;
 		}
 	}
+	
+	public void displayDiskStatus()
+	{
+		int empty = 0,allocated = 0;
+		for(int i = 0; i < diskArray.length ; i++)
+		{
+			if(diskArray[i])
+				allocated++;
+			else
+				empty++;
+			
+		}
+		System.out.println("Empty locations number : " + empty);
+		System.out.println("The Empty Blocks : ");
+		System.out.print("[");
+		for(int i = 0; i < diskArray.length; i++)
+		{
+			if(diskArray[i] == false)
+				System.out.print(i);
+			if(i+1 != diskArray.length)
+				System.out.print(",");
+		}
+		System.out.println("]");
+		
+		System.out.println("\nallocated locations number : " + allocated);
+		System.out.println("The Allocated Blocks : ");
+		System.out.print("[");
+		for(int i = 0; i < diskArray.length; i++)
+		{
+			if(diskArray[i] != false)
+			{
+				System.out.print(i);
+				if(i+1 != diskArray.length)
+					System.out.print(",");
+			}
+		}
+		System.out.println("]");
+	}
+	
+	private int space = 0;
+	public void displayDiskStructure(ContNode node)
+	{
+		
+		if(node.files.size() > 0)
+		{
+			for (int i = 0; i< node.files.size(); i++)
+			{
+				space++;
+				for(int j = 0; j < space; j++)
+					System.out.print(" ");
+				System.out.println(node.files.get(i).name);
+				displayDiskStructure(node.files.get(i));
+			}
+			space--;
+		}
+		else
+			space--;
+	}
 }
 	
 

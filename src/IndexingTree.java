@@ -145,6 +145,7 @@ public class IndexingTree {
 				newNode.name = arr2[0];
 				newNode.value = first;
 				beforeLastNode.files.add(newNode);
+				System.out.println("File created successfully.");
 			}
 			else
 			{
@@ -198,4 +199,60 @@ public class IndexingTree {
 			}
 		}
 	}
+	
+	public void displayDiskStatus()
+	{
+		int empty = 0,allocated = 0;
+		for(int i = 0; i < diskArray.length ; i++)
+		{
+			if(diskArray[i] == -1)
+				empty++;
+			else
+				allocated++;
+		}
+		System.out.println("Empty locations number : " + empty);
+		System.out.println("The Empty Blocks : ");
+		System.out.print("[");
+		for(int i = 0; i < diskArray.length; i++)
+		{
+			if(diskArray[i] == -1)
+				System.out.print(i);
+			if(i+1 != diskArray.length)
+				System.out.print(",");
+		}
+		System.out.println("]");
+		
+		System.out.println("\nallocated locations number : " + allocated);
+		System.out.println("The Allocated Blocks : ");
+		System.out.print("[");
+		for(int i = 0; i < diskArray.length; i++)
+		{
+			if(diskArray[i] != -1)
+			{
+				System.out.print(i);
+				
+				if(i+1 != diskArray.length)
+					System.out.print(",");
+			}
+		}
+		System.out.println("]");
+	}
+	private int space = 0;
+	public void displayDiskStructure(IndexingNode node)
+	{
+		if(node.files.size() > 0)
+		{
+			for (int i = 0; i< node.files.size(); i++)
+			{
+				space++;
+				for(int j = 0; j < space; j++)
+					System.out.print(" ");
+				System.out.println(node.files.get(i).name);
+				displayDiskStructure(node.files.get(i));
+			}
+			space--;
+		}
+		else
+			space--;
+	}	
 }
