@@ -51,9 +51,6 @@ public class FileAllocation {
 				{
 					System.out.println("Wrong command");
 				}
-				for(int i = 0 ; i < c.diskArray.length ; i++)
-					System.out.print(c.diskArray[i]+" ");
-				System.out.println();
 			}
 		}
 		else
