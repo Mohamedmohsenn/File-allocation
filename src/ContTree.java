@@ -91,6 +91,7 @@ public class ContTree {
 			newNode.start = 0;
 			newNode.length = 0;
 			beforeLastNode.files.add(newNode);
+			System.out.println("Folder is created succefully");
 		}
 		else
 		{
@@ -176,6 +177,7 @@ public class ContTree {
 				newNode.length = length;
 				newNode.name = arr2[0];
 				beforeLastNode.files.add(newNode);
+				System.out.println("File is created succefully!");
 			}
 			else
 			{
@@ -188,63 +190,42 @@ public class ContTree {
 		}	
 	}
 		
-	String path2 = "";
-	 public void find(ContNode node,String name)
-	 {
-	            if (node.files.size()!=0)
-	            {
-	                for (int i = 0; i< node.files.size(); i++)
-	                {
-                      deleteFile(path2+"/"+node.files.get(i).name,name);
-	                  find(node.files.get(i),node.files.get(i).name);
-	                }
-	            }
-	}
 
-
-	public void deleteFolder(String path)
+	public void deleteAll(String path)
 	{
 		String arr[] = path.split("/");
 		if(isExist(path,arr[arr.length-1]))
 		{
-			path2 = path;
-			ContNode beforeLastNode = searchAll(path);
-			if(beforeLastNode == null)
+			ContNode curr = getLastNode(path,arr[arr.length-1]);
+			delete(curr);
+			ContNode beforeLast = searchAll(path);
+			for(int i = 0 ; i < beforeLast.files.size() ; i++)
 			{
-				System.out.println("This path is wrong!");
-				return;
-			}
-			ContNode lastNode = getLastNode(path,arr[arr.length-1]);
-			find(lastNode,lastNode.name);
-		}
-		System.out.println("The path is not correct to delete!");
-	}
-	
-	public void deleteFile(String path,String name)
-	{
-		String arr[] = path.split("/");
-		if(isExist(path,name))
-		{
-			ContNode beforeLastNode = searchAll(path);
-			if(beforeLastNode == null)
-			{
-				System.out.println("This path is wrong!");
-				return;
-			}
-			ContNode lastNode = getLastNode(path,name);
-			for(int i = lastNode.start ; i < lastNode.start + lastNode.length  ; i++)
-			{
-				diskArray[i] = false;
-			}
-			for(int i = 0 ; i < beforeLastNode.files.size() ; i++)
-			{
-				if(beforeLastNode.files.get(i) == lastNode)
+				if(beforeLast.files.get(i) == curr)
 				{
-					beforeLastNode.files.remove(i);
+					beforeLast.files.remove(i);
+					System.out.println("removed successfully.");
 					return;
 				}
 			}
-		 }
+		}
+		System.out.println("Path is not correct to remove");
+	}
+	
+	private void delete(ContNode node)
+	{
+		if (node.files.size()!=0)
+		{
+			for (int i = 0; i< node.files.size(); i++)
+			{
+			  	delete(node.files.get(i));
+			}
+		}
+		else
+		{
+			for(int i = node.start; i < node.start + node.length; i++)
+				diskArray[i] = false;
+		}
 	}
 }
 	

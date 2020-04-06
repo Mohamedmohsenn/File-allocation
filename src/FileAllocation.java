@@ -1,10 +1,9 @@
-import java.util.Map;
 import java.util.Scanner;
 public class FileAllocation {
 	public static void main(String args[]){
 		Scanner in = new Scanner(System.in);
 		String method = in.next();
-		if(method.equals("contiguos"))
+		if(method.equals("contiguous"))
 		{
 			ContTree c = new ContTree(10);
 			while(true)
@@ -19,12 +18,14 @@ public class FileAllocation {
 				{
 					c.createFolder(name);
 				}
-				else if(command.equals("DeleteFolder"))
+				else if(command.equals("DeleteFolder") || command.equals("DeleteFile"))
 				{
-					c.deleteFolder(name);
+					c.deleteAll(name);
 				}
-				for(int i = 0 ; i < c.diskArray.length ; i++)
-				System.out.print(c.diskArray[i]+" ");
+			
+//				for(int i = 0 ; i < c.diskArray.length ; i++)
+//					System.out.print(c.diskArray[i]+" ");
+//				System.out.println();
 			}
 		}
 	}
