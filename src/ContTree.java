@@ -30,6 +30,7 @@ public class ContTree {
 		return null;	
 	}
 	
+	
 	///if the path is correct return the node before last node as the last node is not inserted so far.
 	private ContNode searchAll(String name)
 	{
@@ -44,9 +45,21 @@ public class ContTree {
 		return curr;
 	}
 	
+	private ContNode getLastNode(String path,String name)
+	{
+		ContNode curr = searchAll(path);
+		for(int i = 0 ; i < curr.files.size() ; i++)
+		{
+			if(curr.files.get(i).name.equals(name))
+			{
+				return curr.files.get(i);
+			}
+		}
+		return null;
+	}
+	
 	private boolean isExist(String path,String name)
 	{
-		
 		ContNode curr = searchAll(path);
 		if(curr!=null)
 		{
@@ -62,13 +75,12 @@ public class ContTree {
 		return false;
 	}
 	
-	//root/folder1/main.txt 4
 	public void createFolder(String path)
 	{
 		String arr[] = path.split("/");
 		if(!(arr[0].equals(" root")))
 		{
-			System.out.println("Your base directory must be root");
+			System.out.println("path is not correct Your base directory must be root -- cant create file");
 			return;
 		}
 		if(!isExist(path,arr[arr.length-1]))
@@ -122,7 +134,6 @@ public class ContTree {
 		if(!isExist(path,arr2[0]))
 		{
 			ContNode beforeLastNode = searchAll(path);
-			System.out.println();
 			if(beforeLastNode == null)
 			{
 				System.out.println("This path is wrong!");
@@ -174,8 +185,66 @@ public class ContTree {
 		else
 		{
 			System.out.println("File is already exist.");
+		}	
+	}
+		
+	String path2 = "";
+	 public void find(ContNode node,String name)
+	 {
+	            if (node.files.size()!=0)
+	            {
+	                for (int i = 0; i< node.files.size(); i++)
+	                {
+                      deleteFile(path2+"/"+node.files.get(i).name,name);
+	                  find(node.files.get(i),node.files.get(i).name);
+	                }
+	            }
+	}
+
+
+	public void deleteFolder(String path)
+	{
+		String arr[] = path.split("/");
+		if(isExist(path,arr[arr.length-1]))
+		{
+			path2 = path;
+			ContNode beforeLastNode = searchAll(path);
+			if(beforeLastNode == null)
+			{
+				System.out.println("This path is wrong!");
+				return;
+			}
+			ContNode lastNode = getLastNode(path,arr[arr.length-1]);
+			find(lastNode,lastNode.name);
 		}
-			
+		System.out.println("The path is not correct to delete!");
+	}
+	
+	public void deleteFile(String path,String name)
+	{
+		String arr[] = path.split("/");
+		if(isExist(path,name))
+		{
+			ContNode beforeLastNode = searchAll(path);
+			if(beforeLastNode == null)
+			{
+				System.out.println("This path is wrong!");
+				return;
+			}
+			ContNode lastNode = getLastNode(path,name);
+			for(int i = lastNode.start ; i < lastNode.start + lastNode.length  ; i++)
+			{
+				diskArray[i] = false;
+			}
+			for(int i = 0 ; i < beforeLastNode.files.size() ; i++)
+			{
+				if(beforeLastNode.files.get(i) == lastNode)
+				{
+					beforeLastNode.files.remove(i);
+					return;
+				}
+			}
+		 }
 	}
 }
 	
