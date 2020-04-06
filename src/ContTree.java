@@ -210,6 +210,7 @@ public class ContTree {
 			}
 		}
 		System.out.println("Path is not correct to remove");
+		
 	}
 	
 	private void delete(ContNode node)
