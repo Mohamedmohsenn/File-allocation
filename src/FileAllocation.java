@@ -6,25 +6,27 @@ public class FileAllocation {
 		String method = in.next();
 		if(method.equals("contiguous"))
 		{
-			ContTree c = new ContTree(10);
+			ContTree c = new ContTree(20);
+			c.loadData();
 			while(true)
 			{
+				
 				String command = in.next();
 				String name = in.nextLine();
 				if(command.equals("CreateFile"))
 				{
 					c.createFile(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
 				}
 				else if(command.equals("CreateFolder"))
 				{
 					c.createFolder(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
 				}
 				else if(command.equals("DeleteFolder") || command.equals("DeleteFile"))
 				{
 					c.deleteAll(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
 				}
 				else if(command.equals("DisplayDiskStatus"))
 				{
@@ -33,7 +35,7 @@ public class FileAllocation {
 				else if(command.equals("DisplayDiskStructure"))
 				{
 					c.displayDiskStructure(c.root);
-					c.updateVFSFile(c.root);
+					
 				}
 				else
 				{
@@ -43,7 +45,8 @@ public class FileAllocation {
 		}
 		else if(method.equals("indexing"))
 		{
-			IndexingTree c = new IndexingTree(10);
+			IndexingTree c = new IndexingTree(20);
+			c.loadData();
 			while(true)
 			{
 				String command = in.next();
@@ -51,17 +54,19 @@ public class FileAllocation {
 				if(command.equals("CreateFile"))
 				{
 					c.createFile(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
+					
 				}
 				else if(command.equals("CreateFolder"))
 				{
 					c.createFolder(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
 				}
 				else if(command.equals("DeleteFolder") || command.equals("DeleteFile"))
 				{
+					
 					c.deleteAll(name);
-					c.updateVFSFile(c.root);
+					c.addToVFSFile();
 				}
 				else if(command.equals("DisplayDiskStatus"))
 				{
@@ -69,7 +74,8 @@ public class FileAllocation {
 				}
 				else if(command.equals("DisplayDiskStructure"))
 				{
-					c.displayDiskStructure(c.root);	
+					c.displayDiskStructure(c.root);
+					c.loadData();
 				}
 				else
 				{

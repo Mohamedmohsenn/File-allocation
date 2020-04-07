@@ -1,12 +1,16 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.ArrayList;
 
 public class IndexingTree {
 	IndexingNode root;
 	int diskArray[];
+	private ArrayList<String> pathes = new ArrayList<String>();
+	private ArrayList<String> endpoints = new ArrayList<String>();
+	private boolean bool = false;
 	
 	IndexingTree(int x)
 	{ 
@@ -82,7 +86,8 @@ public class IndexingTree {
 		String arr[] = path.split("/");
 		if(!(arr[0].equals(" root")))
 		{
-			System.out.println("path is not correct Your base directory must be root -- cant create file");
+			if(bool)
+				System.out.println("path is not correct Your base directory must be root -- cant create folder");
 			return;
 		}
 		if(!isExist(path,arr[arr.length-1]))
@@ -92,17 +97,17 @@ public class IndexingTree {
 			newNode.name = arr[arr.length-1];
 			newNode.value = -1;
 			beforeLastNode.files.add(newNode);
-			System.out.println("Folder is created succefully");
+			pathes.add(path);
+			if(bool)
+				System.out.println("Folder is created succefully");
 		}
 		else
 		{
-			System.out.println("File is already exist");
+			if(bool)
+				System.out.println("Folder is already exist");
 		}
 	}
 	
-	 
-	
-		
 
 	private int freeSpace()
 	{
@@ -118,6 +123,12 @@ public class IndexingTree {
 	public void createFile(String path)
 	{
 		String arr[] = path.split("/");
+		if(!(arr[0].equals(" root")))
+		{
+			if(bool)
+				System.out.println("path is not correct Your base directory must be root -- cant create file");
+			return;
+		}
 		String arr2[] = arr[arr.length-1].split(" ");
 		int value = Integer.parseInt(arr2[1]);
 		if(!isExist(path,arr2[0]))
@@ -125,7 +136,8 @@ public class IndexingTree {
 			IndexingNode beforeLastNode = searchAll(path);
 			if(beforeLastNode == null)
 			{
-				System.out.println("This path is wrong!");
+				if(bool)
+					System.out.println("This path is wrong!");
 				return;
 			}
 			int size = value;
@@ -151,16 +163,20 @@ public class IndexingTree {
 				newNode.name = arr2[0];
 				newNode.value = first;
 				beforeLastNode.files.add(newNode);
-				System.out.println("File created successfully.");
+				pathes.add(path);
+				if(bool)
+					System.out.println("File created successfully.");
 			}
 			else
 			{
-				System.out.println("No Space available!.");
+				if(bool)
+					System.out.println("No Space available!.");
 			}	
 		}
 		else
 		{
-			System.out.println("already exist.");
+			if(bool)
+				System.out.println("already exist.");
 		}	
 	}
 	
@@ -170,7 +186,9 @@ public class IndexingTree {
 		if(isExist(path,arr[arr.length-1]))
 		{
 			IndexingNode curr = getLastNode(path,arr[arr.length-1]);
+			setEndPoint();
 			delete(curr);
+			endpoints.clear();
 			IndexingNode beforeLast = searchAll(path);
 			for(int i = 0 ; i < beforeLast.files.size() ; i++)
 			{
@@ -185,8 +203,36 @@ public class IndexingTree {
 		System.out.println("Path is not correct to remove");
 	}
 	
+	private void setEndPoint()
+	{
+		for(int i = 0 ; i < pathes.size() ; i++)
+		{
+			if(pathes.get(i).charAt(pathes.get(i).length()-2) == ' ')
+			{
+				String arr[] = pathes.get(i).split("/");
+				String arr2[] = arr[arr.length-1].split(" ");
+				endpoints.add(arr2[0]);
+			}
+			else
+			{
+				String arr[] = pathes.get(i).split("/");
+				endpoints.add(arr[arr.length-1]);
+			}
+		}
+	}
+	
 	public void delete(IndexingNode node)
 	{
+
+		for(int i = 0 ; i < endpoints.size() ; i++)
+		{
+			if(endpoints.get(i).equals(node.name))
+			{
+				pathes.remove(i);
+				endpoints.remove(i);
+				break;
+			}
+		}
 		if (node.files.size()!=0)
 		{
 			for (int i = 0; i< node.files.size(); i++)
@@ -272,51 +318,44 @@ public class IndexingTree {
 			space--;
 	}
 	
-	private int space2 = 0;
-	private boolean flag = true;
-	FileWriter out;
-	public void updateVFSFile(IndexingNode node) throws IOException
+
+	public void addToVFSFile() throws IOException
 	{
-		if(flag)
+		FileWriter out = new FileWriter("E:/eclipse projects/os file allocation/src/Virtual_File_System_by_indexing.txt");
+		for(int i = 0 ; i < pathes.size() ; i++)
 		{
-			out = new FileWriter("E:/eclipse projects/os file allocation/src/Virtual_File_System_by_indexing.txt");
-			out.write("root\n");
-			flag = false;
+			out.write(pathes.get(i)+"\n");
 		}
-		if(node.files.size() > 0)
+		out.close();
+	}
+	
+	public void loadData() throws IOException
+	{
+		ArrayList<String> tmp = new ArrayList<String>(); 
+		File file = new File("E:/eclipse projects/os file allocation/src/Virtual_File_System_by_indexing.txt");
+	    if(file.exists())
 		{
-			for (int i = 0; i< node.files.size(); i++)
+	    	FileReader fr = new FileReader(file);
+		    BufferedReader br = new BufferedReader(fr);	 
+		    String line;
+		    while((line = br.readLine()) != null)
+		    {
+		    	tmp.add(line);
+		    }
+		    br.close();
+		    fr.close();
+			for(int i = 0 ; i < tmp.size() ; i++)
 			{
-				space2++;
-				for(int j = 0; j < space2; j++)
-					out.write(" ");
-				if(node.files.get(i).value==-1)
-					out.write(node.files.get(i).name + "\n");
+				if(tmp.get(i).charAt(tmp.get(i).length()-2) == ' ')
+				{
+					createFile(tmp.get(i));
+				}
 				else
 				{
-					out.write(node.files.get(i).name+ " "+ node.files.get(i).value + "\n");		
-					for(int j = 0; j < space2; j++)
-						out.write(" ");
-					for(int j = 0 ; j < diskArray.length ; j++)
-					{
-						if(diskArray[j] == node.files.get(i).value)
-						{
-							out.write(j + " ");
-						}
-					}
-					out.write("\n");
+					createFolder(tmp.get(i));
 				}
-				updateVFSFile(node.files.get(i));
-			}
-			if(!(node.name.equals("root")))
-				space2--;
-			else
-			{
-				flag = true;
-				out.close();
 			}
 		}
-		else
-			space2--;
+	    bool = true;
 	}
 }
