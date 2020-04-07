@@ -1,6 +1,7 @@
+import java.io.IOException;
 import java.util.Scanner;
 public class FileAllocation {
-	public static void main(String args[]){
+	public static void main(String args[]) throws IOException{
 		Scanner in = new Scanner(System.in);
 		String method = in.next();
 		if(method.equals("contiguous"))
@@ -13,14 +14,17 @@ public class FileAllocation {
 				if(command.equals("CreateFile"))
 				{
 					c.createFile(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("CreateFolder"))
 				{
 					c.createFolder(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("DeleteFolder") || command.equals("DeleteFile"))
 				{
 					c.deleteAll(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("DisplayDiskStatus"))
 				{
@@ -28,8 +32,8 @@ public class FileAllocation {
 				}
 				else if(command.equals("DisplayDiskStructure"))
 				{
-					System.out.println("root");
 					c.displayDiskStructure(c.root);
+					c.updateVFSFile(c.root);
 				}
 				else
 				{
@@ -47,14 +51,17 @@ public class FileAllocation {
 				if(command.equals("CreateFile"))
 				{
 					c.createFile(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("CreateFolder"))
 				{
 					c.createFolder(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("DeleteFolder") || command.equals("DeleteFile"))
 				{
 					c.deleteAll(name);
+					c.updateVFSFile(c.root);
 				}
 				else if(command.equals("DisplayDiskStatus"))
 				{
@@ -62,14 +69,12 @@ public class FileAllocation {
 				}
 				else if(command.equals("DisplayDiskStructure"))
 				{
-					System.out.println("root");
-					c.displayDiskStructure(c.root);
+					c.displayDiskStructure(c.root);	
 				}
 				else
 				{
 					System.out.println("Wrong command");
 				}
-				
 			}
 		}
 		else

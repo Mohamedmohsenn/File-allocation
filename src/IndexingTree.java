@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,9 +100,13 @@ public class IndexingTree {
 		}
 	}
 	
+	 
+	
+		
+
 	private int freeSpace()
 	{
-		int num =0 ;
+		int num = 0;
 		for(int i = 0 ; i < diskArray.length ; i++)
 		{
 			if(diskArray[i] == -1)
@@ -237,9 +243,16 @@ public class IndexingTree {
 		}
 		System.out.println("]");
 	}
+	
 	private int space = 0;
+	private boolean check = true;
 	public void displayDiskStructure(IndexingNode node)
 	{
+		if(check)
+		{
+			System.out.println("root");
+			check = false;
+		}
 		if(node.files.size() > 0)
 		{
 			for (int i = 0; i< node.files.size(); i++)
@@ -250,9 +263,60 @@ public class IndexingTree {
 				System.out.println(node.files.get(i).name);
 				displayDiskStructure(node.files.get(i));
 			}
-			space--;
+			if(!(node.name.equals("root")))
+				space--;	
+			else
+				check = true;
 		}
 		else
 			space--;
-	}	
+	}
+	
+	private int space2 = 0;
+	private boolean flag = true;
+	FileWriter out;
+	public void updateVFSFile(IndexingNode node) throws IOException
+	{
+		if(flag)
+		{
+			out = new FileWriter("E:/eclipse projects/os file allocation/src/Virtual_File_System_by_indexing.txt");
+			out.write("root\n");
+			flag = false;
+		}
+		if(node.files.size() > 0)
+		{
+			for (int i = 0; i< node.files.size(); i++)
+			{
+				space2++;
+				for(int j = 0; j < space2; j++)
+					out.write(" ");
+				if(node.files.get(i).value==-1)
+					out.write(node.files.get(i).name + "\n");
+				else
+				{
+					out.write(node.files.get(i).name+ " "+ node.files.get(i).value + "\n");		
+					for(int j = 0; j < space2; j++)
+						out.write(" ");
+					for(int j = 0 ; j < diskArray.length ; j++)
+					{
+						if(diskArray[j] == node.files.get(i).value)
+						{
+							out.write(j + " ");
+						}
+					}
+					out.write("\n");
+				}
+				updateVFSFile(node.files.get(i));
+			}
+			if(!(node.name.equals("root")))
+				space2--;
+			else
+			{
+				flag = true;
+				out.close();
+			}
+		}
+		else
+			space2--;
+	}
 }

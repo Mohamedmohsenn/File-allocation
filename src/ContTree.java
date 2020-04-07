@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -268,9 +270,14 @@ public class ContTree {
 	}
 	
 	private int space = 0;
+	boolean check = true;
 	public void displayDiskStructure(ContNode node)
 	{
-		
+		if(check)
+		{
+			System.out.println("root");
+			check = false;
+		}
 		if(node.files.size() > 0)
 		{
 			for (int i = 0; i< node.files.size(); i++)
@@ -281,10 +288,52 @@ public class ContTree {
 				System.out.println(node.files.get(i).name);
 				displayDiskStructure(node.files.get(i));
 			}
-			space--;
+			if(!(node.name.equals("root")))
+				space--;	
+			else
+				check = true;
 		}
 		else
 			space--;
+	}
+	
+	
+	
+	private int space2 = 0;
+	private boolean flag = true;
+	FileWriter out;
+	public void updateVFSFile(ContNode node) throws IOException
+	{
+		if(flag)
+		{
+			out = new FileWriter("E:/eclipse projects/os file allocation/src/Virtual_File_System_by_contiguos.txt");
+			out.write("root\n");
+			flag = false;
+		}
+		if(node.files.size() > 0)
+		{
+			for (int i = 0; i< node.files.size(); i++)
+			{
+				space2++;
+				for(int j = 0; j < space2; j++)
+					out.write(" ");
+				if(node.files.get(i).start == 0 && node.files.get(i).length == 0)
+					out.write(node.files.get(i).name + "\n");
+				else
+					out.write(node.files.get(i).name+ " "+ node.files.get(i).start + " " +node.files.get(i).length+ "\n");		
+				
+				updateVFSFile(node.files.get(i));
+			}
+			if(!(node.name.equals("root")))
+				space2--;
+			else
+			{
+				flag = true;
+				out.close();
+			}
+		}
+		else
+			space2--;
 	}
 }
 	
