@@ -125,8 +125,7 @@ public class IndexingTree {
 		String arr[] = path.split("/");
 		if(!(arr[0].equals(" root")))
 		{
-			if(bool)
-				System.out.println("path is not correct Your base directory must be root -- cant create file");
+			System.out.println("path is not correct Your base directory must be root -- cant create file");
 			return;
 		}
 		String arr2[] = arr[arr.length-1].split(" ");
@@ -136,10 +135,11 @@ public class IndexingTree {
 			IndexingNode beforeLastNode = searchAll(path);
 			if(beforeLastNode == null)
 			{
-				if(bool)
-					System.out.println("This path is wrong!");
+
+				System.out.println("This path is wrong!");
 				return;
 			}
+			String numbers="";
 			int size = value;
 			int first = 0;
 			int space = freeSpace();
@@ -155,6 +155,7 @@ public class IndexingTree {
 							first = i;
 						}
 						diskArray[i] = first;
+						numbers+=Integer.toString(i);
 						size--;
 					}
 					i++;
@@ -164,19 +165,17 @@ public class IndexingTree {
 				newNode.value = first;
 				beforeLastNode.files.add(newNode);
 				pathes.add(path);
-				if(bool)
-					System.out.println("File created successfully.");
+				pathes.add(numbers);
+				System.out.println("File created successfully.");
 			}
 			else
 			{
-				if(bool)
-					System.out.println("No Space available!.");
+				System.out.println("No Space available!.");
 			}	
 		}
 		else
 		{
-			if(bool)
-				System.out.println("already exist.");
+			System.out.println("already exist.");
 		}	
 	}
 	
@@ -223,7 +222,6 @@ public class IndexingTree {
 	
 	public void delete(IndexingNode node)
 	{
-
 		for(int i = 0 ; i < endpoints.size() ; i++)
 		{
 			if(endpoints.get(i).equals(node.name))
@@ -346,11 +344,28 @@ public class IndexingTree {
 		    fr.close();
 			for(int i = 0 ; i < tmp.size() ; i++)
 			{
-				if(tmp.get(i).charAt(tmp.get(i).length()-2) == ' ')
+				String arr[] = tmp.get(i).split("/");
+				if(tmp.get(i).charAt(tmp.get(i).length()-2) == ' ' && arr[0].equals(" root"))
 				{
-					createFile(tmp.get(i));
+					String ar[] = tmp.get(i).split("/");
+					String arr2[] = ar[ar.length-1].split(" ");
+					int value = Integer.parseInt(arr2[1]);
+					IndexingNode newNode = new IndexingNode();
+					newNode.name = arr2[0];
+					newNode.value = Integer.parseInt(String.valueOf(tmp.get(i+1).charAt(0)));
+					IndexingNode beforeLastNode = searchAll(tmp.get(i));
+					beforeLastNode.files.add(newNode);
+					pathes.add(tmp.get(i));
+					pathes.add(tmp.get(i+1));
+					
+					for(int j = 0 ; j < value ; j++)
+					{
+						int num = Integer.parseInt(String.valueOf(tmp.get(i+1).charAt(j)));
+						diskArray[num] = newNode.value;
+					}
+					
 				}
-				else
+				else if(arr[0].equals(" root"))
 				{
 					createFolder(tmp.get(i));
 				}

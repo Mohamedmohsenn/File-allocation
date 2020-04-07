@@ -1,0 +1,3 @@
+ root/sameh
+ root/sameh/ahmed.txt 3
+03

@@ -1,0 +1,6 @@
+ root/mohamed
+ root/ahmed
+ root/7mada.txt 5
+01234
+ root/7masa.txt 3
+567

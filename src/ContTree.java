@@ -143,8 +143,7 @@ public class ContTree {
 		String arr[] = path.split("/");
 		if(!(arr[0].equals(" root")))
 		{
-			if(bool)
-				System.out.println("path is not correct Your base directory must be root -- cant create file");
+			System.out.println("path is not correct Your base directory must be root -- cant create file");
 			return;
 		}
 		String arr2[] = arr[arr.length-1].split(" ");
@@ -154,8 +153,7 @@ public class ContTree {
 			ContNode beforeLastNode = searchAll(path);
 			if(beforeLastNode == null)
 			{
-				if(bool)
-					System.out.println("This path is wrong!");
+				System.out.println("This path is wrong!");
 				return;
 			}
 			Map<Integer ,Integer> mp = getFreeSpaces();
@@ -191,24 +189,26 @@ public class ContTree {
 					diskArray[i] = true;
 				}
 				ContNode newNode = new ContNode();
+				String num = "";
+
 				newNode.start = start;
+				num += Integer.toString(start);
 				newNode.length = length;
+				num += Integer.toString(length);
 				newNode.name = arr2[0];
 				beforeLastNode.files.add(newNode);
 				pathes.add(path);
-				if(bool)
-					System.out.println("File is created succefully!");
+				pathes.add(num);
+				System.out.println("File is created succefully!");
 			}
 			else
 			{
-				if(bool)
-					System.out.println("No Space Available.");
+				System.out.println("No Space Available.");
 			}	
 		}
 		else
 		{
-			if(bool)
-				System.out.println("already exist.");
+			System.out.println("already exist.");
 		}	
 	}
 		
@@ -375,11 +375,26 @@ public class ContTree {
 		    fr.close();
 			for(int i = 0 ; i < tmp.size() ; i++)
 			{
-				if(tmp.get(i).charAt(tmp.get(i).length()-2) == ' ')
+				String arr[] = tmp.get(i).split("/");
+				if(tmp.get(i).charAt(tmp.get(i).length()-2) == ' ' && arr[0].equals(" root"))
 				{
-					createFile(tmp.get(i));
+					String ar[] = tmp.get(i).split("/");
+					String arr2[] = ar[ar.length-1].split(" ");
+					int value = Integer.parseInt(arr2[1]);
+					ContNode newNode = new ContNode();
+					newNode.name = arr2[0];
+					newNode.length = value;
+					newNode.start = Integer.parseInt(String.valueOf(tmp.get(i+1).charAt(0)));
+					ContNode beforeLastNode = searchAll(tmp.get(i));
+					beforeLastNode.files.add(newNode);
+					pathes.add(tmp.get(i));
+					pathes.add(tmp.get(i+1));
+					for(int j = newNode.start ; j < newNode.start + newNode.length ; j++)
+					{
+						diskArray[j] = true;
+					}
 				}
-				else
+				else if(arr[0].equals(" root"))
 				{
 					createFolder(tmp.get(i));
 				}
